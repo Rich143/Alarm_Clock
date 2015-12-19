@@ -17,10 +17,14 @@ void setup(){
 
 void loop(){
   printTime(); // prints time to Serial Monitor for debuggin purposes
+
+  lcd.clear();
   lcd.setCursor(0,1);
   lcd.print(clock.hour, DEC);
   lcd.print(":");
-  lcd.
+  lcd.print(clock.min, DEC);
+  
+  delay(30000);
 }
 
 void displayTime(){
