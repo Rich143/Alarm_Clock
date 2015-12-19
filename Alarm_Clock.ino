@@ -6,6 +6,8 @@
 
 
 DS1307 clock; // clock object
+LiquidCrystal lcd(2, 3, 9, 10, 11, 12);
+
 void setup(){
     Serial.begin(9600);
     clock.begin();
@@ -22,9 +24,13 @@ void loop(){
   lcd.setCursor(0,1);
   lcd.print(clock.hour, DEC);
   lcd.print(":");
-  lcd.print(clock.min, DEC);
+  lcd.print(clock.minute < 10 ? "0":"");
+  lcd.print(clock.minute, DEC);
+  lcd.print(":");
+  lcd.print(clock.second < 10 ? "0":"");
+  lcd.print(clock.second, DEC);
   
-  delay(30000);
+  delay(500);
 }
 
 void displayTime(){
