@@ -12,7 +12,7 @@
 #define BEEPING 1
 #define NOT_BEEPING 0
 
-#define BUZZ_PERIOD 100
+#define BUZZ_PERIOD 100 // ms
 
 bool alarmMode = true;
 int alarmHour = 15;
@@ -56,18 +56,14 @@ void loop(){
       break;
     case BEEPING: // if alarm mode is enabled
       Alarm();
-      if (clock.second > secondStarted + ALARM_DURATION){
+      if (clock.second > secondStarted + ALARM_DURATION || buttonPressed()){
         Alarm_Off();
         state = NOT_BEEPING;
-      }
-      if (buttonPressed()){
-        Alarm_Off();
-        state = NOT_BEEPING;
-      }
-      
-      break;
-  }  
-  delay(500);
+        alarmMode = false;      
+        break;
+      }  
+  }
+  
 }
 
 void displayTime(){
