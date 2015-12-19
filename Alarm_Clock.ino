@@ -9,6 +9,7 @@
 #define ALARM_DURATION 5
 #define BEEPING 1
 #define NOT_BEEPING 0
+#define BUZZ_PERIOD 100
 
 bool alarmMode = true;
 int alarmHour = 15;
@@ -113,8 +114,8 @@ void printTime(){
   Serial.println(" ");
 }
 
-
-void Alarm(int duration)
+/*
+void Alarm(unsigned long startTime, int duration)
 {
     unsigned long startTime = millis();
     while (millis()-startTime <= duration) {
@@ -130,4 +131,21 @@ void Alarm(int duration)
 
        delay(100);
     }
+}
+*/
+
+void Alarm() 
+{
+    static uint8_t buzzState = 1;
+    static unsigned long lastBuzz = 0;
+    
+    if (millis() - lastBuzz >= BUZZ_PERIOD) {
+        digitalWrite(BUZZER_PIN, buzzState);
+        buzzState ^= 1; // toggle buzzer state
+    }
+}
+
+void Alarm_Off() 
+{
+    digitalWrite(BUZZER_PIN, LOW);
 }
