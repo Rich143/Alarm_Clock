@@ -4,12 +4,18 @@
 #include "DS1307.h"
 #include <LiquidCrystal.h>
 
+#define BUZZER_PIN 7
+#define BUTTON_PIN 8
 
 DS1307 clock; // clock object
 LiquidCrystal lcd(2, 3, 9, 10, 11, 12);
 
 void setup(){
     Serial.begin(9600);
+
+    pinMode(BUZZER_PIN, OUTPUT);
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
+
     clock.begin();
     clock.fillByYMD(2015,12,19); // Dec 19, 2015
     clock.fillByHMS(15,28,30); // 15:28 30
@@ -83,3 +89,21 @@ void printTime(){
   Serial.println(" ");
 }
 
+
+void Alarm(int duration)
+{
+    unsigned long startTime = millis();
+    while (millis()-startTime <= duration) {
+       digitalWrite(BUZZER_PIN, HIGH);
+       delay(100);
+       digitalWrite(BUZZER_PIN, LOW);
+
+       // turn off the alarm if button is pushed
+       if (!digitRead(BUTTON_PIN)) {
+            digitalWrite(BUZZER_PIN, LOW);
+            break;
+       }
+
+       delay(100);
+    }
+}
