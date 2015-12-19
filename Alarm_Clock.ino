@@ -6,9 +6,12 @@
 
 #define BUZZER_PIN 6
 #define BUTTON_PIN 8
+
 #define ALARM_DURATION 5
+
 #define BEEPING 1
 #define NOT_BEEPING 0
+
 #define BUZZ_PERIOD 100
 
 bool alarmMode = true;
@@ -148,4 +151,13 @@ void Alarm()
 void Alarm_Off() 
 {
     digitalWrite(BUZZER_PIN, LOW);
+}
+
+bool buttonPressed() 
+{
+    if (!digitalRead(BUTTON_PIN)) {
+        return true;
+    } else {
+        return false;
+    }
 }
