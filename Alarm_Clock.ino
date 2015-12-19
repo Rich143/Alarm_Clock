@@ -6,6 +6,9 @@
 
 #define BUZZER_PIN 6
 #define BUTTON_PIN 8
+#define ALARM_DURATION 5
+#define BEEPING 1
+#define NOT_BEEPING 0
 
 bool alarmMode = true;
 int alarmHour = 15;
@@ -14,6 +17,7 @@ int alarmMinute = 28;
 DS1307 clock; // clock object
 LiquidCrystal lcd(2, 3, 9, 10, 11, 12);
 
+int state = 0;
 void setup(){
 
   
@@ -30,8 +34,32 @@ void setup(){
 }
 
 void loop(){
-  printTime(); // prints time to Serial Monitor for debuggin purposes
 
+  static int secondStarted;
+  
+  printTime(); // prints time to Serial Monitor for debuggin purposes
+  switch (state){
+    case NOT_BEEPING: // if its not in alarm mode, just regular
+      displayTime();
+      if (clock.hour == alarmHour && clock.minute == alarmMinute){
+        secondStarted = clock.second;
+        state = BEEPING;
+      }
+      break;
+    case BEEPING: // if alarm mode is enabled
+    // rememeber the alarm goes for 5 seconds
+      Alarm();
+      if (clock.second > secondStarted + ALARM_DURATION){
+        Alarm_Off();
+        state = NOT_BEEPING;
+        }
+      break;
+  }  
+  delay(500);
+}
+
+void displayTime(){
+  // outputs the current time to the LCD
   lcd.clear();
   lcd.setCursor(0,1);
   lcd.print(clock.hour, DEC);
@@ -41,23 +69,6 @@ void loop(){
   lcd.print(":");
   lcd.print(clock.second < 10 ? "0":"");
   lcd.print(clock.second, DEC);
-
-  if (alarmMode){
-    if (clock.hour == alarmHour && clock.minute == alarmMinute){
-      Alarm(5000);
-      alarmMode = false;
-    }
-  }
-  
-  delay(500);
-}
-
-void displayTime(){
-  // outputs the current time to the LCD
-  lcd.setCursor(0,1);
-  lcd.print(clock.hour, DEC); // returns military time
-  lcd.print(":");
-  lcd.print(clock.minute, DEC);
 }
 
 void printTime(){
