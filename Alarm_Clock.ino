@@ -18,10 +18,12 @@ int alarmMinute = 28;
 DS1307 clock; // clock object
 LiquidCrystal lcd(2, 3, 9, 10, 11, 12);
 
-int state = 0;
-void setup(){
+int state;
 
+void setup(){
   
+    state = NOT_BEEPING; // initially not beeping
+    
     Serial.begin(9600);
 
     pinMode(BUZZER_PIN, OUTPUT);
@@ -37,14 +39,15 @@ void setup(){
 void loop(){
 
   static int secondStarted;
-  
+  displayTime();// prints regardless of switch cases..
   printTime(); // prints time to Serial Monitor for debuggin purposes
+  
   switch (state){
     case NOT_BEEPING: // if its not in alarm mode, just regular
-      displayTime();
-      if (clock.hour == alarmHour && clock.minute == alarmMinute){
-        secondStarted = clock.second;
-        state = BEEPING;
+      if (alarmMode){
+        if (clock.hour == alarmHour && clock.minute == alarmMinute){
+          secondStarted = clock.second;
+          state = BEEPING;
       }
       break;
     case BEEPING: // if alarm mode is enabled
@@ -53,7 +56,8 @@ void loop(){
       if (clock.second > secondStarted + ALARM_DURATION){
         Alarm_Off();
         state = NOT_BEEPING;
-        }
+      }
+      
       break;
   }  
   delay(500);
