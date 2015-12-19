@@ -9,8 +9,10 @@
 
 #define ALARM_DURATION 5
 
+// define the machine states
 #define BEEPING 1
 #define NOT_BEEPING 0
+#define SETTING_ALARM 2
 
 #define BUZZ_PERIOD 100 // ms
 
@@ -47,6 +49,10 @@ void loop(){
   
   switch (state){
     case NOT_BEEPING: // if its not in alarm mode, just regular
+      if (setAlarmButton){ // if pressed than go to that state
+        state = SETTING_ALARM;
+        break; ..
+      }
       if (alarmMode){
         if (clock.hour == alarmHour && clock.minute == alarmMinute){
           secondStarted = clock.second;
@@ -62,8 +68,21 @@ void loop(){
         alarmMode = false;      
         break;
       }  
-  }
-  
+     case SETTING_ALARM:
+      // test to make sure the set alarm button is still being held
+        if (!alarmSetButton){
+          state = NOT_BEEPING;
+          break;
+        }
+        if (alarmHourSetButton){
+          alarmHour ++;
+        }
+        if (alarmMinuteSetButton){
+          alarmMinute ++;
+        }
+        displayAlarm();
+        break;
+    }
 }
 
 void displayTime(){
