@@ -32,6 +32,10 @@ void setup(){
 
     pinMode(BUZZER_PIN, OUTPUT);
     pinMode(ALARM_OFF_BUTTON_PIN, INPUT_PULLUP);
+    pinMode(ALARM_SET_BUTTON_PIN, INPUT_PULLUP);
+    pinMode(ALARM_INC_HOUR_PIN, INPUT_PULLUP);
+    pinMode(ALARM_INC_MIN_PIN, INPUT_PULLUP);
+
 
     clock.begin();
     clock.fillByYMD(2015,12,19); // Dec 19, 2015
