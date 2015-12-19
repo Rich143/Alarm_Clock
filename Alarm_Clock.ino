@@ -133,3 +133,8 @@ void Alarm()
         buzzState ^= 1; // toggle buzzer state
     }
 }
+
+void Alarm_Off() 
+{
+    digitalWrite(BUZZER_PIN, LOW);
+}
