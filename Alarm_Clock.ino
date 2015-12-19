@@ -51,12 +51,16 @@ void loop(){
         if (clock.hour == alarmHour && clock.minute == alarmMinute){
           secondStarted = clock.second;
           state = BEEPING;
+        }
       }
       break;
     case BEEPING: // if alarm mode is enabled
-    // rememeber the alarm goes for 5 seconds
       Alarm();
       if (clock.second > secondStarted + ALARM_DURATION){
+        Alarm_Off();
+        state = NOT_BEEPING;
+      }
+      if (buttonPressed()){
         Alarm_Off();
         state = NOT_BEEPING;
       }
