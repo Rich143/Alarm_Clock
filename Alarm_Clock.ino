@@ -8,9 +8,9 @@
 #define ALARM_OFF_BUTTON_PIN 8
 #define ALARM_SET_BUTTON_PIN A0
 #define ALARM_INC_HOUR_PIN A1
-#define ALAR_INC_MIN_PIN A2
+#define ALARM_INC_MIN_PIN A2
 
-#define ALARM_DURATION 5
+#define ALARM_DURATION 5 // in seconds
 
 // define the machine states
 #define BEEPING 1
@@ -23,10 +23,12 @@ bool alarmMode = true;
 int alarmHour = 15;
 int alarmMinute = 28;
 
+int secondStarted;
+
 DS1307 clock; // clock object
 LiquidCrystal lcd(2, 3, 9, 10, 11, 12);
 
-int state;
+int state; // state of the machine
 
 boolean minuteButtonPressed = false;
 boolean hourButtonPressed = false;
@@ -53,7 +55,6 @@ void setup(){
 
 void loop(){
 
-  static int secondStarted;
   displayTime();// prints regardless of switch cases..
   printTime(); // prints time to Serial Monitor for debuggin purposes
   
@@ -72,7 +73,7 @@ void loop(){
       break;
     case BEEPING: // if alarm mode is enabled
       Alarm();
-      if (clock.second > secondStarted + ALARM_DURATION || buttonPressed()){
+      if (clock.second > secondStarted + ALARM_DURATION || buttonPressed(ALARM_OFF_BUTTON_PIN)){
         Alarm_Off();
         state = NOT_BEEPING;
         alarmMode = false;      
@@ -80,19 +81,31 @@ void loop(){
       }  
      case SETTING_ALARM:
       // test to make sure the set alarm button is still being held
+        Serial.print("Setting Alarm Mode");
         if (!buttonPressed(ALARM_SET_BUTTON_PIN)){
           state = NOT_BEEPING;
           break;
         }
         if (buttonPressed(ALARM_INC_HOUR_PIN)){
+          Serial.print("Increment Hour");
           alarmHour ++;
         }
         if (buttonPressed(ALARM_INC_MIN_PIN)){
+          Serial.print("Increment Second");
           alarmMinute ++;
         }
         displayAlarm();
         break;
     }
+}
+
+void displayAlarm(){
+  lcd.clear();
+  lcd.setCursor(0,1);
+  lcd.print(alarmHour, DEC);
+  lcd.print(":");
+  lcd.print(alarmMinute < 10 ? "0":"");
+  lcd.print(alarmMinute, DEC);
 }
 
 void displayTime(){
