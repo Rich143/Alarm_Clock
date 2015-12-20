@@ -30,6 +30,9 @@ LiquidCrystal lcd(2, 3, 9, 10, 11, 12);
 
 int state; // state of the machine
 
+boolean minuteButtonPressed = false;
+boolean hourButtonPressed = false;
+
 void setup(){
   
     state = NOT_BEEPING; // initially not beeping
@@ -203,4 +206,52 @@ bool buttonPressed(int buttonPin)
     } else {
         return false;
     }
+}
+
+bool buttonPressedDebounce(int buttonPin) 
+{
+    if (buttonPressed(buttonPin)) {
+        delay(100); // delay to debounce
+        if (buttonPressed(buttonPin)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+bool incrementCount(int buttonPin)
+{
+    if (hourButtonPressed && buttonPin == ALARM_INC_HOUR_PIN) {
+        if (!buttonPressed(buttonPin)) {
+            hourButtonPressed = false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    if (minuteButtonPressed && buttonPin == ALARM_INC_MIN_PIN) {
+        if (!buttonPressed(buttonPin)) {
+            minuteButtonPressed = false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    if (buttonPressedDebounce(buttonPin)) {
+        if (buttonPin == ALARM_INC_HOUR_PIN) {
+            hourButtonPressed = true;
+            return false;
+        }
+        if (buttonPin == ALARM_INC_MIN_PIN) {
+            minuteButtonPressed = true;
+            return false;
+        }
+    }
+
+    return false;
 }
