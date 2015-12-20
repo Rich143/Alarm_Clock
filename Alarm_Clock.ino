@@ -77,14 +77,14 @@ void loop(){
       }  
      case SETTING_ALARM:
       // test to make sure the set alarm button is still being held
-        if (!alarmSetButton){
+        if (!buttonPressed(ALARM_SET_BUTTON_PIN)){
           state = NOT_BEEPING;
           break;
         }
-        if (alarmHourSetButton){
+        if (buttonPressed(ALARM_INC_HOUR_PIN)){
           alarmHour ++;
         }
-        if (alarmMinuteSetButton){
+        if (buttonPressed(ALARM_INC_MIN_PIN)){
           alarmMinute ++;
         }
         displayAlarm();
