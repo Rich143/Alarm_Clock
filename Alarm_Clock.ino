@@ -56,9 +56,9 @@ void loop(){
   
   switch (state){
     case NOT_BEEPING: // if its not in alarm mode, just regular
-      if (setAlarmButton){ // if pressed than go to that state
+      if (buttonPressed(ALARM_SET_BUTTON_PIN)){ // if pressed than go to that state
         state = SETTING_ALARM;
-        break; ..
+        break; 
       }
       if (alarmMode){
         if (clock.hour == alarmHour && clock.minute == alarmMinute){
