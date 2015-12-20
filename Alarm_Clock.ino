@@ -5,7 +5,10 @@
 #include <LiquidCrystal.h>
 
 #define BUZZER_PIN 6
-#define BUTTON_PIN 8
+#define ALARM_OFF_BUTTON_PIN 8
+#define ALARM_SET_BUTTON_PIN A0
+#define ALARM_INC_HOUR_PIN A1
+#define ALAR_INC_MIN_PIN A2
 
 #define ALARM_DURATION 5
 
@@ -32,7 +35,11 @@ void setup(){
     Serial.begin(9600);
 
     pinMode(BUZZER_PIN, OUTPUT);
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
+    pinMode(ALARM_OFF_BUTTON_PIN, INPUT_PULLUP);
+    pinMode(ALARM_SET_BUTTON_PIN, INPUT_PULLUP);
+    pinMode(ALARM_INC_HOUR_PIN, INPUT_PULLUP);
+    pinMode(ALARM_INC_MIN_PIN, INPUT_PULLUP);
+
 
     clock.begin();
     clock.fillByYMD(2015,12,19); // Dec 19, 2015
@@ -150,7 +157,7 @@ void Alarm(unsigned long startTime, int duration)
        digitalWrite(BUZZER_PIN, LOW);
 
        // turn off the alarm if button is pushed
-       if (!digitalRead(BUTTON_PIN)) {
+       if (!digitalRead(ALARM_OFF_BUTTON_PIN)) {
             digitalWrite(BUZZER_PIN, LOW);
             break;
        }
@@ -176,9 +183,9 @@ void Alarm_Off()
     digitalWrite(BUZZER_PIN, LOW);
 }
 
-bool buttonPressed() 
+bool buttonPressed(int buttonPin) 
 {
-    if (!digitalRead(BUTTON_PIN)) {
+    if (!digitalRead(buttonPin)) {
         return true;
     } else {
         return false;
